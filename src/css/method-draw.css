@@ -288,3 +288,7 @@ input[readonly=readonly]:focus {
 .stroke_tool .caret {
   top: 60%;
 }
+
+#tool_clear, #tool_open {
+  display: none !important;
+}

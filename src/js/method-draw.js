@@ -699,20 +699,9 @@ window.methodDraw = function() {
     };
     
     var clickClear = function(){
-      var dims = curConfig.dimensions;
-      $.confirm("<strong>Do you want to clear the drawing?</strong>\nThis will also erase your undo history", function(ok) {
-        if(!ok) return;
-        setSelectMode();
-        svgCanvas.deleteSelectedElements();
-        svgCanvas.clear();
-        svgCanvas.setResolution(dims[0], dims[1]);
-        updateCanvas(true);
-        createBackground();
-        zoomImage();
-        updateContextPanel();
-        prepPaints();
-        svgCanvas.runExtensions('onNewDocument');
-      });
+      // 禁用新建文档功能
+      console.log("New document feature is disabled");
+      return false;
     };
     
     var clickBold = function(){
@@ -741,7 +730,9 @@ window.methodDraw = function() {
     // it is up to an extension mechanism (opera widget, etc) 
     // to call setCustomHandlers() which will make it do something
     var clickOpen = function(){
-      svgCanvas.open();
+      // 禁用打开SVG功能
+      console.log("Open SVG feature is disabled");
+      return false;
     };
     var clickImport = function(){
     };
