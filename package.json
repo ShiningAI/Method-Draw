@@ -1,14 +1,15 @@
 {
   "name": "method-draw",
-  "version": "0.0.1",
-  "description": "Method Draw is an SVG Editor for the web",
+  "version": "1.0.0",
+  "description": "A web based vector drawing application",
   "main": "index.js",
   "directories": {
     "doc": "docs",
     "test": "test"
   },
   "scripts": {
-    "test": "test"
+    "build": "gulp build",
+    "start": "npx http-server dist -p 3000"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
     "gulp-replace": "^1.1.3",
-    "gulp-useref": "^4.0.1"
+    "gulp-useref": "^5.0.0",
+    "http-server": "^14.1.1"
   }
 }

@@ -12,7 +12,10 @@ gulp.task('css', function () {
 });
 
 gulp.task('js', function () {
-  return gulp.src(['src/js/*.js', 'src/lib/*.js']) 
+  return gulp.src([
+    'src/js/*.js',
+    'src/lib/*.js'
+  ]) 
     .pipe(concat('all.js'))
     .pipe(gulp.dest('dist'));
 });
