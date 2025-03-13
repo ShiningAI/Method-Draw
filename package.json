@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "gulp build",
+    "dev": "npm run build && npm run start",
     "start": "npm run build && http-server dist -p 3000",
     "deploy": "npm run build && wrangler pages deploy ./dist"
   },
