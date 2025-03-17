@@ -1615,21 +1615,6 @@ const fonts = {
     }
   },
 
-  "Work Sans": {
-    "axes": {
-      "ital": {
-        name: "Italic",
-        range: [0,1],
-        value: 0
-      },
-      "wght": {
-        name: "Weight",
-        range: [100, 900],
-        value: 400
-      }
-    }
-  },
-
   "Yaldevi": {
     "axes": {
       "wght": {
