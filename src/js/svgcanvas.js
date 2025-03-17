@@ -5088,6 +5088,7 @@ var removeUnusedDefElems = this.removeUnusedDefElems = function() {
 // Returns: 
 // String containing the SVG image for output
 this.svgCanvasToString = function() {
+  this.leaveContext();
   // keep calling it until there are none to remove
   while (removeUnusedDefElems() > 0) {};
   
