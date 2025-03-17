@@ -59,6 +59,11 @@ gulp.task('shapelib', function(){
     .pipe(gulp.dest('dist/shapelib'));
 });
 
+gulp.task('fonts', function(){
+  return gulp.src(['src/fonts/**/*'])
+    .pipe(gulp.dest('dist/fonts'));
+});
+
 gulp.task('canvg', function(){
   return gulp.src(['src/js/lib/canvg.js', 'src/js/lib/rgbcolor.js'])
     .pipe(gulp.dest('dist/js/lib'));
@@ -73,6 +78,7 @@ gulp.task('build',
       'images',
       'extensions',
       'shapelib',
+      'fonts',
       'canvg'
   )
 );
