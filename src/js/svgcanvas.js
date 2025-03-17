@@ -1931,6 +1931,7 @@ var recalculateDimensions = this.recalculateDimensions = function(selected) {
     // we want it to be [Rnew][M][Tr] where Tr is the
     // translation required to re-center it
     // Therefore, [Tr] = [M_inv][Rnew_inv][Rold][M]
+    // Therefore, [Tr] = [M_inv][Rnew_inv][Rold][M]
     else if (operation == 3 && angle) {
       var m = transformListToTransform(tlist).matrix;
       var roldt = svgroot.createSVGTransform();
@@ -3463,8 +3464,7 @@ var textActions = canvas.textActions = function() {
       }
     }
     
-    var charbb;
-    charbb = chardata[index];
+    var charbb = chardata[index];
     if (!charbb) return;
     if(!empty) {
       textinput.setSelectionRange(index, index);
@@ -5767,6 +5767,9 @@ this.setSvgString = function(xmlString) {
     var newDoc = svgedit.utilities.text2xml(xmlString);
     var batchCmd = new BatchCommand("Change Source");
 
+    // 保存 SVG 根元素的 style 属性，特别是 background
+    var rootStyle = newDoc.documentElement.getAttribute('style');
+    
     this.prepareSvg(newDoc);
     newDoc = this.styleToAttr(newDoc);
     
@@ -5777,6 +5780,39 @@ this.setSvgString = function(xmlString) {
   
 
     svgcontent = svgdoc.adoptNode(newDoc.documentElement);
+    
+    // 如果原始 SVG 有 background 样式，需要创建或修改背景矩形
+    if (rootStyle && rootStyle.indexOf('background') >= 0) {
+      // 提取 background 颜色
+      var bgMatch = rootStyle.match(/background\s*:\s*([^;]+)/i);
+      if (bgMatch && bgMatch[1]) {
+        var bgColor = bgMatch[1].trim();
+        
+        // 查找现有的 canvas_background 元素或创建一个新的
+        var canvasBackground = $(svgcontent).find('#canvas_background');
+        if (canvasBackground.length === 0) {
+          // 创建新的背景矩形
+          var rect = document.createElementNS(svgns, 'rect');
+          rect.setAttribute('id', 'canvas_background');
+          rect.setAttribute('width', '100%');
+          rect.setAttribute('height', '100%');
+          rect.setAttribute('x', '0');
+          rect.setAttribute('y', '0');
+          rect.setAttribute('stroke', 'none');
+          rect.setAttribute('fill', bgColor);
+          
+          // 插入到 SVG 内容的开头
+          if (svgcontent.firstChild) {
+            svgcontent.insertBefore(rect, svgcontent.firstChild);
+          } else {
+            svgcontent.appendChild(rect);
+          }
+        } else {
+          // 更新现有背景矩形
+          canvasBackground.attr('fill', bgColor);
+        }
+      }
+    }
     
     svgroot.appendChild(svgcontent);
     var content = $(svgcontent);
