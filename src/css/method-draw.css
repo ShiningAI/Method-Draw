@@ -259,6 +259,19 @@ button:focus {
     clear:both;
 }
 
+/* 嵌入模式相关样式 */
+body.embedded-mode {
+  /* 嵌入模式下可以有一个微妙的边框指示 */
+  border: 1px solid var(--z3);
+}
+
+/* 嵌入模式下禁用的按钮样式 */
+.embedded-mode .disabled-in-embed {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
 input[readonly=readonly]:focus {
   box-shadow: none;
 }
@@ -289,6 +302,6 @@ input[readonly=readonly]:focus {
   top: 60%;
 }
 
-#tool_clear, #tool_open {
+/* #tool_clear, #tool_open {
   display: none !important;
-}
+} */
