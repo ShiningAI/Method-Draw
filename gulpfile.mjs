@@ -1,9 +1,8 @@
-const gulp = require('gulp');
-const concat = require('gulp-concat');
-const useref = require('gulp-useref');
-const replace = require('gulp-replace');
-const cachebust = require('gulp-cache-bust');
-const minify = require('gulp-minify');
+import gulp from 'gulp';
+import concat from 'gulp-concat';
+import useref from 'gulp-useref';
+import replace from 'gulp-replace';
+import cachebust from 'gulp-cache-bust';
 
 gulp.task('css', function () {
   return gulp.src('src/css/*.css')
