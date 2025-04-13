@@ -26,7 +26,30 @@ function initChannel() {
     switch (type) {
       case "loadStringSVG":
         try {
+          // 类似clickClear的行为，但不显示确认对话框，直接执行清除操作
+          
+          // 1. 先清空画布（会重置撤销栈和创建默认图层）
+          svgCanvas.clear();
+          
+          // 2. 设置选择模式
+          svgCanvas.setMode('select');
+          
+          // 3. 获取当前分辨率
+          var res = svgCanvas.getResolution();
+          
+          // 4. 设置回原始分辨率（保持画布大小）
+          svgCanvas.setResolution(res.w, res.h);
+          
+          // 5. 加载用户提供的SVG
           svgCanvas.setSvgString(data.svg);
+          
+          // 6. 再次重置撤销栈，防止用户撤销回到空白画布
+          svgCanvas.undoMgr.resetUndoStack();
+          
+          // 7. 通知扩展新文档已创建
+          svgCanvas.runExtensions('onNewDocument');
+          
+          // 8. 返回成功响应
           event.source.postMessage(
             {
               type: "loadStringSVG:response",
