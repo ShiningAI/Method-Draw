@@ -46,10 +46,84 @@ function initChannel() {
           // 6. 再次重置撤销栈，防止用户撤销回到空白画布
           svgCanvas.undoMgr.resetUndoStack();
           
-          // 7. 通知扩展新文档已创建
+          // 7. 自动调整缩放级别以适应可视区域（使用预设的缩放级别）
+          try {
+            // 获取工作区域的尺寸
+            var workarea = document.getElementById('workarea');
+            if (workarea) {
+              // 获取当前SVG内容的边界框
+              var bbox = svgCanvas.getStrokedBBox();
+              if (bbox && bbox.width && bbox.height) {
+                // 考虑滚动条宽度
+                var scrbarWidth = 15;
+                var workarea_width = workarea.clientWidth - scrbarWidth;
+                var workarea_height = workarea.clientHeight - scrbarWidth;
+                
+                // 计算适合当前内容的缩放比例
+                var w_zoom = Math.round((workarea_width / bbox.width) * 95) / 100;
+                var h_zoom = Math.round((workarea_height / bbox.height) * 95) / 100;
+                var optimalZoom = Math.min(w_zoom, h_zoom);
+                
+                // 预设的缩放级别数组（与#zoom_select对应）
+                var predefinedZooms = [0.06, 0.12, 0.16, 0.25, 0.5, 0.75, 1, 1.5, 2, 3, 4, 6, 8, 16];
+                
+                // 找到最接近的预设缩放级别
+                var closestZoom = 1; // 默认100%
+                var minDiff = Number.MAX_VALUE;
+                for (var i = 0; i < predefinedZooms.length; i++) {
+                  var diff = Math.abs(predefinedZooms[i] - optimalZoom);
+                  if (diff < minDiff) {
+                    minDiff = diff;
+                    closestZoom = predefinedZooms[i];
+                  }
+                }
+                
+                // 如果计算出的缩放级别小于6%，使用6%以保证可见性
+                if (closestZoom < 0.06) {
+                  closestZoom = 0.06;
+                }
+                
+                // 使用UI控件设置缩放级别，这样会触发正常的缩放流程
+                var zoomPercent = Math.round(closestZoom * 100);
+                var zoomSelect = document.getElementById('zoom_select');
+                var zoomInput = document.getElementById('zoom');
+                
+                if (zoomInput) {
+                  zoomInput.value = zoomPercent;
+                  // 触发change事件
+                  var evt = document.createEvent('HTMLEvents');
+                  evt.initEvent('change', false, true);
+                  zoomInput.dispatchEvent(evt);
+                } else if (zoomSelect) {
+                  // 如果没有找到#zoom输入框，尝试使用select控件
+                  for (var i = 0; i < zoomSelect.options.length; i++) {
+                    if (parseInt(zoomSelect.options[i].value) === zoomPercent) {
+                      zoomSelect.selectedIndex = i;
+                      // 触发change事件
+                      var evt = document.createEvent('HTMLEvents');
+                      evt.initEvent('change', false, true);
+                      zoomSelect.dispatchEvent(evt);
+                      break;
+                    }
+                  }
+                } else {
+                  // 如果找不到UI控件，直接设置缩放
+                  svgCanvas.setZoom(closestZoom);
+                  // 更新画布
+                  if (typeof window.updateCanvas === 'function') {
+                    window.updateCanvas(true);
+                  }
+                }
+              }
+            }
+          } catch (zoomErr) {
+            console.warn("自动缩放失败，使用默认缩放:", zoomErr);
+          }
+          
+          // 8. 通知扩展新文档已创建
           svgCanvas.runExtensions('onNewDocument');
           
-          // 8. 返回成功响应
+          // 9. 返回成功响应
           event.source.postMessage(
             {
               type: "loadStringSVG:response",
